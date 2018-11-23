@@ -1,0 +1,28 @@
+{% extends 'myadmin/base.html'%}
+{% load static %}
+{% block css%} {% static '/myadmin/css/edit.css'%} {% endblock css%}
+{% block title %}添加日程_CLuo工作室{% endblock title	 %}
+
+{% block content %}
+ <br>  
+{% if errno%}
+        {% if errno == '添加成功' %}
+          <div class="alert alert-primary alert-dismissible" role="alert">
+        {% else%}
+          <div class="alert alert-warning alert-dismissible" role="alert">
+        {% endif %}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <strong><center>{{ errno }}</center></strong> 
+      </div>
+      {% endif%}
+<form id="form-edit" method='POST' action=''>
+	{% csrf_token %}
+  <div class="form-group">
+    <label for="editTodo"></label>
+    <input name='edit_task' class="form-control form-control- g" id="editTodo" type="text" value="{{ edit_task }}">
+    <small id="help" class="form-text text-muted">在这里编辑待办事项</small>
+  </div>
+  <button type="submit" class="btn btn-primary btn-lg btn-block">提交</button>
+</form>
+
+{% endblock content %}
