@@ -1,6 +1,14 @@
+
 .no-underline>tr>td>a:hover{
 	text-decoration: none;
 }
 #line-through{ 
 	text-decoration: line-through;
 }
+
+#save_1>a{
+	font-color: #212529;
+	text-decoration:none;
+
+}
+

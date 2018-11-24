@@ -5,8 +5,9 @@
 {% block home_active %}active{% endblock home_active %} {# 高亮#}
 
 {% block content %}
-      
-  <button type="button" class="btn btn-dark">运行</button>
-
+<p>
+  <button type="button" class="btn btn-small" id="save_1"><a href="{% url 'myadmin:savecloud_from_text' %}">云盘保存</a></button>
+  <button class="btn btn-large" type="button">Large button</button>
+</p>
 {% endblock content %}
 

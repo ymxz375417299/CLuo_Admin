@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+import re
 
 # Create your views here.
 to_do_list = [
@@ -60,3 +61,28 @@ def cross(requset, forloop_counter):
     else:
         to_do_list[int(forloop_counter) - 1]['process'] = True
         return redirect('myadmin:home')
+
+
+def sdahkd(cloud_text):
+	re_compile = re.compile('https://pan.b.*?\\r', re.S)
+	# 所有账号含密码的字符串
+    cloud_lines = re.findall(re_compile, cloud_text)
+	print(cloud_lines)
+	for i in cloud_lines:
+		i = ''.join(i.split())
+        url = re.search("(https:.*?)/", i).group(1)
+        print(url)
+        pwd = re.search('提取码(.*?)复', i).group(1)
+        print(pwd)
+    return 1
+
+
+def savecloud_from_text(request):
+    if request.method == 'POST':
+        cloud_text = request.POST['cloud_text']
+        account = request.POST['account']
+        cloud_list = sdahkd(cloud_text)
+        print(cloud_text)
+        return render(request, 'myadmin/savecloud_from_text.html')
+    else:
+        return render(request, 'myadmin/savecloud_from_text.html')
