@@ -1,5 +1,7 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect,render_to_response, HttpResponse
 import re
+from django.http import JsonResponse
+import json
 
 # Create your views here.
 to_do_list = [
@@ -56,6 +58,7 @@ def cross(requset, forloop_counter):
     print(forloop_counter)
     print(requset.POST['process'])
     if int(requset.POST['process']) == 1:
+
         to_do_list[int(forloop_counter) - 1]['process'] = False
         return redirect('myadmin:home')
     else:
@@ -78,10 +81,15 @@ def cross(requset, forloop_counter):
 
 
 def savecloud_from_text(request):
-    if request.method == 'POST':
-        print('11111')
-        print(request.POST)
-
+    if request.method == 'GET':
         return render(request, 'myadmin/savecloud_from_text.html')
     else:
-        return render(request, 'myadmin/savecloud_from_text.html')
+        print(request.POST)
+        print(request.POST.get('account'))
+        print(request.POST.get('cloud_text'))
+        content ={}
+        content['account'] = request.POST.get('account')
+        content['cloud_text'] = request.POST.get('cloud_text')
+        print('34234',HttpResponse(json.dumps({"info": content})))
+        # return HttpResponse(json.dumps({"info": content}), content_type='application/json')
+        return JsonResponse({"info":content}, content_type='application/json')
