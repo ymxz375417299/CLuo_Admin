@@ -3,6 +3,7 @@ import re
 from django.http import JsonResponse
 import json
 from pymongo import MongoClient
+import time
 
 # Create your views here.
 to_do_list = [
@@ -93,30 +94,46 @@ def savecloud_from_text(request):
     """
     保存网盘
     """
+    # 提取初始化账户信息
+    # 格式为{'account':xxx,'process': None,}
+    global savecloud_from_text_data
+    mongo_use = mongo_init()
+    try:
+        account_m = mongo_use.find_one({'_id': 'admin'})['account']
+        print(account_m)
+    except Exception as e:
+        # 数据库账号信息
+        account_m = {'_id': 'admin', 'account': ''}
+        mongo_use.insert_one(account_m)
+        savecloud_from_text()
     if request.method == 'GET':
-        # content格式为{'account':xxx,'process': None,}
-        mongo_use = mongo_init()
-        try:
-            content = mongo_use.find_one({'_id': 'admin'})
-            print(content)
-        except Exception as e:
-            account = {'_id': 'admin', 'account': None}
-            mongo_use.insert_one(account)
-            savecloud_from_text()
-        print(content)
-        data = {'info': content}
+        data = {'info': account_m}
         return render(request, 'myadmin/savecloud_from_text.html', data)
     else:
-
-        data = {'info': content}
-        content['account'] = request.POST.get('account')
-        content['cloud_text'] = request.POST.get('cloud_text')
-        content['process'] = 'sucess'
+        # post请求内的账号信息
+        account_p = request.POST.get('account')
+        if not account_p == account_m:
+            try:
+                mongo_use.update_one({'account': account_m}, {
+                                 '$set': {'account': account_p}})
+                print('账号保存成功')
+            except Exception as e:
+                print('账号保存失败： %s' % (e))
+        cloud_text = request.POST.get('cloud_text')
+        info = {
+            'account': account_p,
+            'process': 'null',
+        }
+        data = {'info': info}
+        while True:
+        	print('111111')
+        	time.sleep(1)
         return JsonResponse(data, content_type='application/json')
+    savecloud_from_text_data = data
 
 
 def check_saveonecloud(request):
     """
     检测任务监督
     """
-    return JsonResponse({'info': content}, content_type='application/json')
+    return JsonResponse(savecloud_from_text_data, content_type='application/json')
