@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, render_to_response, HttpResponse
 import re
 from django.http import JsonResponse
 import json
+from pymongo import MongoClient
 
 # Create your views here.
 to_do_list = [
@@ -9,6 +10,14 @@ to_do_list = [
     {'task': '任务一', 'process': False},
     {'task': '任务二', 'process': True},
 ]
+
+
+def mongo_init():
+    global mongo_use
+    mongo_client = MongoClient('localhost', 27017)
+    mongo_db = mongo_client['CLuo_Admin_App']
+    mongo_use = mongo_db['myadmin']
+    return mongo_use
 
 
 def home(request):
@@ -81,17 +90,33 @@ def cross(requset, forloop_counter):
 
 
 def savecloud_from_text(request):
+    """
+    保存网盘
+    """
     if request.method == 'GET':
-        content = {'account': 11111, 'cloud_text': '222'}
-        return render(request, 'myadmin/savecloud_from_text.html', {'info': content})
+        # content格式为{'account':xxx,'process': None,}
+        mongo_use = mongo_init()
+        try:
+            content = mongo_use.find_one({'_id': 'admin'})
+            print(content)
+        except Exception as e:
+            account = {'_id': 'admin', 'account': None}
+            mongo_use.insert_one(account)
+            savecloud_from_text()
+        print(content)
+        data = {'info': content}
+        return render(request, 'myadmin/savecloud_from_text.html', data)
     else:
-        print(request.POST)
-        print(request.POST.get('account'))
-        print(request.POST.get('cloud_text'))
-        content = {}
+
+        data = {'info': content}
         content['account'] = request.POST.get('account')
         content['cloud_text'] = request.POST.get('cloud_text')
-        print('34234', JsonResponse(
-            {"info": content}, content_type='application/json'))
-        # return HttpResponse(json.dumps({"info": content}), content_type='application/json')
-        return JsonResponse({"info": content}, content_type='application/json')
+        content['process'] = 'sucess'
+        return JsonResponse(data, content_type='application/json')
+
+
+def check_saveonecloud(request):
+    """
+    检测任务监督
+    """
+    return JsonResponse({'info': content}, content_type='application/json')

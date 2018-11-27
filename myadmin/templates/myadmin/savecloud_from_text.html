@@ -10,67 +10,61 @@
 <script type='text/javascript'>
   $(function(){
     // 初始化
-
     var account = $('#account');
     var cloud_text = $('#cloud_text');
     var btn = $('#psbtn');
-    {% if {{ info }}%}
-      account.val('我')
-      cloud_text.val('你')
-    {% endif %}
-    // 防跨站設置
-    $.ajaxSetup({
-      data: {csrfmiddlewaretoken: '{{ csrf_token }}' },  
-    });
-    // 點擊提交ajax
-    btn.click(function(){
-      var account = $('#account').val();
-      var cloud_text = $('#cloud_text').val();
+    
+    function submit_task(){
+      // 提交ajax
+      var account_v = account.val();
+      var cloud_text_v = cloud_text.val();
+
+      // 防跨站設置
+      $.ajaxSetup({
+        data: {csrfmiddlewaretoken: '{{ csrf_token }}' },  
+      })
+
+      //提交ajax
       $.ajax({
         url:"{% url 'myadmin:savecloud_from_text' %}", //提交到那里
         type:"POST", //提交类型
-        data:{"account":account, "cloud_text":cloud_text}, //提交的数据
+        data:{"account":account_v, "cloud_text":cloud_text_v}, //提交的数据
         datType: "text",
         success:function(data1){
-          $('#cloud_text').val(data1.info.cloud_text);
-          $('#account').val(data1.info.account);
-          
+          //返回完成进度\
+          process_v = data1.info.process;//不加var 为全局变量
+          if(process_v == 11){
+            alert('结束')
+          }
+        }
+      })
+
+    }
+    
+    function check_task(){
+      $.ajaxSetup({
+        data: {csrfmiddlewaretoken: '{{ csrf_token }}'},
+      })
+      //提交
+      $.ajax({
+        url: "{% url 'myadmin:check_saveonecloud' %}",
+        type:'GET',
+        success: function(data1){
+          alert(data1.info.process)
         },
-        
-      });
-    });
+
+
+      })
+    }
+
+    btn.click(function(){
+      submit_task();
+      var task1 = setInterval(check_task, 10000)
+
+    })
   });
   
-  
 
-
-  // $(function(){
-
-  //     var btn = $('#psbtn')
-  //     btn.click(function(){
-  //       alert('点击已启动');
-  //       var account = $('#account').val();
-  //       var cloud_text = $('#cloud_text').val();
-  //       $.post('{% url 'myadmin:savecloud_from_text' %}', {"sda":432});
-  //     });
-  // });
-
-
-// $(document).ready(function(){
-//  $("#psbtn").click(function(){
-//   var account=$("#account").val();
-//   var cloud_text=$("#cloud_text").val();                //获取输入框中的ip
-//   $.ajax({
-//         url:"{% url "myadmin:savecloud_from_text" %}", //提交到那里
-//         type:"POST", //提交类型
-//         data:{"11111":2222,"3333":4444} //提交的数据
-//         success:function(data1){ //success不会直接运行，当服务器有数据传输过来才会触发执行。
-// 　　　　　　　　　　　　　　　　　　　　//匿名函数必须要有一个参数，用来接受数据，data1用来接受是服务器端返回字符串数据
-//         alter(data1);
-//     }
-//     })
-// });       
-// });
 </script>
 
 
@@ -83,6 +77,14 @@
     </div>
     <div class="form-group">
     <textarea  class="form-control" id="cloud_text" rows="3"placeholder="解析的内容"></textarea></div>
+    <div>
+    <div class="form-group" >
+    <div  class="form-control" id="control" title="控制台">
+      <p>控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台控制台</p>
+      <p>控制台</p>
+      <p>控制台</p>
+      <p>控制台</p>
+    </div></div>
     <div>
     <button id="psbtn" type="button" class="btn btn-dark">运行</button>
     </div>

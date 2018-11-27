@@ -1,4 +1,3 @@
-
 .no-underline>tr>td>a:hover{
 	text-decoration: none;
 }
@@ -6,9 +5,24 @@
 	text-decoration: line-through;
 }
 
+
+
 #save_1>a{
 	font-color: #212529;
 	text-decoration:none;
 
 }
 
+
+#control{
+	background-color:#000;
+
+	height:500px;
+	opacity:0.8;
+	filter:alpha(opacity=80);
+
+}
+
+#control>p{
+	margin-bottom:5px;
+}

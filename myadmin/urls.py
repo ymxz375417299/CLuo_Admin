@@ -9,5 +9,6 @@ urlpatterns = [
     path('del/<forloop_counter>', views.delete, name='del'),
     path('cross/<forloop_counter>', views.cross, name='cross'),
     path('savecloud_from_text/', views.savecloud_from_text,
-         name='savecloud_from_text')
+         name='savecloud_from_text'),
+    path('check_saveonecloud', views.check_saveonecloud, name='check_saveonecloud'),
 ]
