@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect,render_to_response, HttpResponse
+from django.shortcuts import render, redirect, render_to_response, HttpResponse
 import re
 from django.http import JsonResponse
 import json
@@ -82,14 +82,16 @@ def cross(requset, forloop_counter):
 
 def savecloud_from_text(request):
     if request.method == 'GET':
-        return render(request, 'myadmin/savecloud_from_text.html')
+        content = {'account': 11111, 'cloud_text': '222'}
+        return render(request, 'myadmin/savecloud_from_text.html', {'info': content})
     else:
         print(request.POST)
         print(request.POST.get('account'))
         print(request.POST.get('cloud_text'))
-        content ={}
+        content = {}
         content['account'] = request.POST.get('account')
         content['cloud_text'] = request.POST.get('cloud_text')
-        print('34234',HttpResponse(json.dumps({"info": content})))
+        print('34234', JsonResponse(
+            {"info": content}, content_type='application/json'))
         # return HttpResponse(json.dumps({"info": content}), content_type='application/json')
-        return JsonResponse({"info":content}, content_type='application/json')
+        return JsonResponse({"info": content}, content_type='application/json')

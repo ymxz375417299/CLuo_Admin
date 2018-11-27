@@ -9,9 +9,15 @@
 <script type='text/javascript' src='{% static "myadmin/js/jquery-3.3.1.min.js" %}'></script>
 <script type='text/javascript'>
   $(function(){
+    // 初始化
 
+    var account = $('#account');
+    var cloud_text = $('#cloud_text');
     var btn = $('#psbtn');
-
+    {% if {{ info }}%}
+      account.val('我')
+      cloud_text.val('你')
+    {% endif %}
     // 防跨站設置
     $.ajaxSetup({
       data: {csrfmiddlewaretoken: '{{ csrf_token }}' },  
@@ -24,14 +30,10 @@
         url:"{% url 'myadmin:savecloud_from_text' %}", //提交到那里
         type:"POST", //提交类型
         data:{"account":account, "cloud_text":cloud_text}, //提交的数据
-        datType: "JSON",
+        datType: "text",
         success:function(data1){
-          alert(data1)
-          var a = data1;
-          alert(a.type);
-          alert(a.info.account);
-          alert(a.rows);
-          alert(a);
+          $('#cloud_text').val(data1.info.cloud_text);
+          $('#account').val(data1.info.account);
           
         },
         
